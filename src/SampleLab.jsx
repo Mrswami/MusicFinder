@@ -154,10 +154,10 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
             {/* Header */}
             <div className="lab-header">
                 <div className="lab-title-block">
-                    <div className="lab-icon">📀</div>
+                    <div className="lab-icon-minimal">[VAULT_REF]</div>
                     <div>
-                        <h2 className="lab-title">Sample Lab</h2>
-                        <p className="lab-subtitle">Your music production archive — save, download & sample</p>
+                        <h2 className="lab-title">SAMPLE_VAULT</h2>
+                        <p className="lab-subtitle">Production archive: persistence and retrieval system</p>
                     </div>
                 </div>
 
@@ -182,11 +182,11 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
             {ytdlpStatus !== null && (
                 <div className={`ytdlp-banner ${ytdlpStatus.available ? 'ytdlp-ok' : 'ytdlp-missing'}`}>
                     {ytdlpStatus.available ? (
-                        <>✅ <strong>yt-dlp {ytdlpStatus.version}</strong> — MP3 downloads ready</>
+                        <>[SYSTEM_STATUS: OK] <strong>yt-dlp {ytdlpStatus.version}</strong> — MP3 downloads active</>
                     ) : (
                         <>
-                            ⚠️ <strong>yt-dlp not found.</strong> Install it to enable downloads:{' '}
-                            <code>pip install yt-dlp</code> or <code>winget install yt-dlp</code>
+                            [SYSTEM_ALERT: MISSING_DEP] <strong>yt-dlp not found.</strong> Install it to enable downloads:{' '}
+                            <code>pip install yt-dlp</code>
                         </>
                     )}
                 </div>
@@ -197,10 +197,10 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
                 <div className="shuffle-center ombre-panel">
                     <div className="shuffle-header">
                         <div className="shuffle-title">
-                            🛰️ Deep Shuffle Engine
+                            [ENGINE] DEEP_SHUFFLE
                         </div>
                         <div className="ytdlp-banner ytdlp-ok" style={{ margin: 0, padding: '0.2rem 0.6rem', fontSize: '0.7rem' }}>
-                            Ready to Disrupt
+                            READY
                         </div>
                     </div>
 
@@ -209,22 +209,20 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
                             className={`shuffle-card ${activeFilter === 'true-random' ? 'active' : ''}`}
                             onClick={() => setActiveFilter('true-random')}
                         >
-                            <span className="mode-icon">🌪️</span>
-                            <span className="mode-name">True Random</span>
+                            <span className="mode-name">TRUE_RANDOM</span>
                             <p className="mode-desc">Fisher-Yates algorithm. Complete unpredictability. Zero weights.</p>
                         </div>
                         <div
                             className={`shuffle-card ${activeFilter === 'atmospheric' ? 'active' : ''}`}
                             onClick={() => setActiveFilter('atmospheric')}
                         >
-                            <span className="mode-icon">🌌</span>
-                            <span className="mode-name">Atmospheric</span>
+                            <span className="mode-name">ATMOSPHERIC</span>
                             <p className="mode-desc">Smart distribution. Spaced-out artists. No repeat fatigue.</p>
                         </div>
                     </div>
 
                     <div className="shuffle-history-info ombre-panel" style={{ marginTop: '1rem', padding: '1.2rem', borderRadius: '20px', fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <div style={{ fontWeight: 800, marginBottom: '0.5rem', color: 'var(--accent-secondary)' }}>💡 Why Deep Shuffle?</div>
+                        <div style={{ fontWeight: 800, marginBottom: '0.5rem', color: 'var(--accent-secondary)' }}>LOGIC_REF: Why Deep Shuffle?</div>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.5' }}>
                             Standard "Shuffle" on most platforms is often weighted to keep you listening, sometimes creating predictable loops.
                             <strong> True Random</strong> uses the Fisher-Yates method—scientifically perfect randomization.
@@ -254,11 +252,11 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
             {/* Empty state */}
             {sampleVault.length === 0 ? (
                 <div className="lab-empty">
-                    <div className="empty-icon">🎚️</div>
-                    <h3>Your Sample Vault is Empty</h3>
+                    <div className="empty-icon">[EMPTY_REF]</div>
+                    <h3>Vault Status: Null</h3>
                     <p>
-                        When you find a track that inspires you, click <strong>﹢ Add to Samples</strong> on any
-                        track card. It'll appear here, ready to download as an MP3 for your DAW.
+                        When you find a track that inspires you, click <strong>[+] Add to Samples</strong> on any
+                        track card. It'll appear here, ready for post-processing.
                     </p>
                 </div>
             ) : (
@@ -363,7 +361,7 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
                                         disabled={wsLoading}
                                         title="Who Sampled This?"
                                     >
-                                        {wsLoading ? '⏳' : '🔬 Samples'}
+                                        {wsLoading ? 'FETCHING' : 'ANALYSIS'}
                                     </button>
 
                                     {/* Toggle expand */}
@@ -372,7 +370,7 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
                                         onClick={() => setExpandedSample(isExpanded ? null : key)}
                                         title="Details"
                                     >
-                                        {isExpanded ? '▲' : '▼'}
+                                        {isExpanded ? 'LESS' : 'MORE'}
                                     </button>
 
                                     {/* Remove from vault */}
@@ -380,7 +378,7 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
                                         className="vault-btn btn-remove"
                                         onClick={() => onRemoveSample(sample)}
                                         title="Remove from Vault"
-                                    >✕</button>
+                                    >RETRCT</button>
                                 </div>
 
                                 {/* Expanded: WhoSampled + track metadata */}

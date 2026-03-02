@@ -176,10 +176,10 @@ export default function VideoParser({ onAlbumsFound, token, onAddToSamples }) {
                 })
             }
 
-            setPlaylistStatus(`✅ Created playlist with ${trackUris.length} tracks!`)
+            setPlaylistStatus(`[SUCCESS] Created playlist with ${trackUris.length} tracks!`)
             setPlaylistUrl(playlist.external_urls?.spotify || `https://open.spotify.com/playlist/${playlist.id}`)
         } catch (err) {
-            setPlaylistStatus(`❌ Error: ${err.message}`)
+            setPlaylistStatus(`[ERROR] ${err.message}`)
         } finally {
             setCreatingPlaylist(false)
         }
@@ -223,23 +223,23 @@ export default function VideoParser({ onAlbumsFound, token, onAddToSamples }) {
                 />
                 <div className="parser-buttons">
                     <button type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading ? 'Parsing...' : '🔍 Parse'}
+                        {loading ? 'PARSING' : '[SEARCH]'}
                     </button>
                     <button
                         type="button"
                         className="btn btn-ai"
                         onClick={() => handleParse(null, true)}
                         disabled={loading}
-                        title="Use Gemini 2.5 Flash for intelligent extraction"
+                        title="Neural extraction mode"
                     >
-                        {loading ? 'Thinking...' : '✨ AI Deep Scan'}
+                        {loading ? 'SCALING' : '[DEEP_SCAN]'}
                     </button>
                 </div>
             </form>
 
             {error && (
                 <div className="parse-error">
-                    <span>⚠️</span>
+                    <span>[ALERT]</span>
                     <span>{error}</span>
                 </div>
             )}
@@ -248,9 +248,9 @@ export default function VideoParser({ onAlbumsFound, token, onAddToSamples }) {
                 <div className="parse-result">
                     <div className="result-meta">
                         <span className="source-badge">
-                            {result.source === 'youtube' ? '▶ YouTube' : '🌐 Web Page'}
+                            {result.source === 'youtube' ? 'STREAM_YT' : 'REMOTE_WEB'}
                         </span>
-                        <span className="found-count">{result.albums.length} mentions found</span>
+                        <span className="found-count">{result.albums.length} NODES_DETECTED</span>
                     </div>
 
                     {result.albums.length === 0 ? (
@@ -313,7 +313,7 @@ export default function VideoParser({ onAlbumsFound, token, onAddToSamples }) {
                                                     disabled={alreadyAdded}
                                                     title="Add to Sample Lab"
                                                 >
-                                                    {alreadyAdded ? '✓ In Vault' : '﹢ Sample'}
+                                                    {alreadyAdded ? '[IN_VAULT]' : '[+] VAULT'}
                                                 </button>
                                             </div>
                                         </div>
@@ -328,11 +328,11 @@ export default function VideoParser({ onAlbumsFound, token, onAddToSamples }) {
                                         onClick={createPlaylist}
                                         disabled={creatingPlaylist}
                                     >
-                                        {creatingPlaylist ? playlistStatus : `🎵 Create Spotify Playlist (${result.albums.length} tracks)`}
+                                        {creatingPlaylist ? playlistStatus : `MAP_TRACKS: Create Spotify Playlist (${result.albums.length} units)`}
                                     </button>
                                     {playlistUrl && (
                                         <a href={playlistUrl} target="_blank" rel="noreferrer" className="btn btn-spotify" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}>
-                                            🔗 Open Playlist
+                                            [LINK] Open Playlist
                                         </a>
                                     )}
                                 </div>

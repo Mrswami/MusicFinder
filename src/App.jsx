@@ -391,10 +391,10 @@ function App() {
   }
 
   const TABS = [
-    { id: 'discover', label: 'Discover', icon: '✨' },
-    { id: 'parse', label: 'Parse', icon: '🔍' },
-    { id: 'lab', label: 'Sample Lab', icon: '📀', badge: sampleVault.length },
-    { id: 'hub', label: 'Matrix', icon: '🛰️' }
+    { id: 'discover', label: 'DISCOVER', icon: '' },
+    { id: 'parse', label: 'PARSE', icon: '' },
+    { id: 'lab', label: 'VAULT', icon: '', badge: sampleVault.length },
+    { id: 'hub', label: 'MATRIX', icon: '' }
   ]
 
   const spotifyAuthSection = (
@@ -425,161 +425,133 @@ function App() {
     <div className="setup-wrapper">
       <form className="config-form" onSubmit={saveClientId}>
         <div className="setup-header">
-          <div className="setup-icon">🚀</div>
-          <h2>Initialize Your Pipeline</h2>
-          <p>Connect your Spotify Developer App to enable playlist creation and deep track enrichment.</p>
+          <div className="setup-icon-minimal">[SYSTEM_INIT]</div>
+          <h2>Initialize Pipeline</h2>
+          <p>Link your Spotify Developer credentials to enable automated crate digging and playlist generation.</p>
         </div>
 
         <div className="setup-tabs">
           <div className="setup-option">
-            <div className="setup-option-label">✨ New App</div>
-            <ol className="setup-steps">
-              <li>Open <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noreferrer">Dashboard</a></li>
-              <li>Click <strong>"Create App"</strong></li>
-              <li>Add Redirect URI: <code>{window.location.origin}</code></li>
-              <li>Check <strong>"Web API"</strong> and save</li>
-            </ol>
+            <div className="setup-option-label">CONSOLE_CONFIG</div>
+            <div className="setup-steps">
+              <p>1. Open Spotify Developer Dashboard</p>
+              <p>2. Create application: Web API focus</p>
+              <p>3. Set Redirect URI to: <code>{window.location.origin}</code></p>
+              <p>4. ENABLE "Implicit Grant" in app settings.</p>
+            </div>
           </div>
-          <div className="setup-divider">AND</div>
+          <div className="setup-divider">|</div>
           <div className="setup-option">
-            <div className="setup-option-label">📎 Get Key</div>
-            <ol className="setup-steps">
-              <li>Go to <strong>Settings</strong></li>
-              <li>Copy <strong>Client ID</strong></li>
-              <li>Required Redirect URI:</li>
-              <li className="uri-copy" onClick={() => navigator.clipboard.writeText(window.location.origin)}>
-                <code>{window.location.origin}</code>
-                <span>📋</span>
-              </li>
-            </ol>
+            <div className="setup-option-label">CREDENTIAL_ENTRY</div>
+            <div className="setup-steps">
+              <p>1. Copy Client ID from Dashboard</p>
+              <p>2. Ensure Redirect URI matches exactly</p>
+              <p>3. Submit to finalize system link</p>
+            </div>
           </div>
         </div>
 
         <div className="setup-input-group">
           <input
             name="clientId"
-            placeholder="Paste your Spotify Client ID here"
+            placeholder="[CLIENT_ID_INPUT]"
             className="setup-input"
           />
-          <button type="submit" className="btn btn-primary">Connect Pipeline →</button>
+          <button type="submit" className="btn btn-primary">Connect Pipeline</button>
         </div>
-
-        <p className="setup-hint">
-          💡 <strong>Security:</strong> Your Client ID is stored locally in your browser and never leaves this machine.
-        </p>
       </form>
     </div>
   )
 
   return (
-    <div className="app-shell">
-      {/* Sidebar nav */}
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <div className="brand-icon">📀</div>
-          <div>
-            <div className="brand-name">SpotifyUnlocked</div>
-            <div className="brand-tagline">Premium Music Lab</div>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              className={`nav-item ${activeTab === tab.id ? 'active' : ''} ${tab.id === 'lab' && vaultPulse ? 'pulsing' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <span className="nav-icon">{tab.icon}</span>
-              <span className="nav-label">{tab.label}</span>
-              {tab.badge > 0 && (
-                <span className="nav-badge">{tab.badge}</span>
-              )}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-footer">
-          {user ? (
-            <div className="cloud-profile">
-              <img src={user.photoURL} alt="pfp" className="user-avatar-sm" style={{ borderColor: 'var(--accent-secondary)' }} />
-              <div className="profile-info">
-                <span className="profile-name">{user.displayName}</span>
-                <button onClick={handleFirebaseLogout} className="sidebar-logout">Cloud Sign Out</button>
-              </div>
-            </div>
-          ) : (
-            <button onClick={loginWithGoogle} className="btn-google">
-              <span className="g-icon">G</span> Sync with Google
-            </button>
-          )}
-        </div>
-      </aside>
-
-      {/* Main panel */}
-      <main className="main-panel">
-        {/* Top bar */}
-        <div className="topbar">
-          <div className="topbar-left">
-            <div className="topbar-title">
-              {TABS.find(t => t.id === activeTab)?.label}
-            </div>
-
+    <div className="matrix-app">
+      {/* SIDE DATA BAR - MONITORING & AUTH */}
+      <aside className="side-monitor">
+        <div className="monitor-pane">
+          <div className="monitor-header">TELEMETRY_v2.0</div>
+          <div className="playback-status">
             {nowPlaying ? (
-              <div className="now-playing-ticker">
-                <span className="ticker-label">LIVE:</span>
-                <span className="ticker-text">{nowPlaying.name} — {nowPlaying.artists[0]?.name}</span>
-                <div className="ticker-pulse"></div>
+              <div className="status-item active">
+                <label>STREAMING_LIVE</label>
+                <div className="val">{nowPlaying.item.name}</div>
+                <div className="sub-val">{nowPlaying.item.artists[0].name}</div>
               </div>
-            ) : topTrack && (
-              <div className="now-playing-ticker top-track-mode">
-                <span className="ticker-label">TOP:</span>
-                <span className="ticker-text">{topTrack.name} — {topTrack.artists[0]?.name}</span>
+            ) : topTrack ? (
+              <div className="status-item idle">
+                <label>HISTORY_TOP_REF</label>
+                <div className="val">{topTrack.name}</div>
+                <div className="sub-val">{topTrack.artists[0].name}</div>
+              </div>
+            ) : (
+              <div className="status-item offline">
+                <label>SIGNAL_PENDING</label>
+                <div className="val">WAITING_FOR_DATA</div>
               </div>
             )}
           </div>
 
-          <div className="topbar-auth">
+          <div className="branding-node">
+            <h1>UNLOCKED_LAB</h1>
+            <div className="sys-ver">OP_BUILD_5485ca9</div>
+          </div>
+
+          <div className="monitor-auth">
             {spotifyAuthSection}
           </div>
         </div>
+      </aside>
 
-        <div className="panel-content">
-          {!clientId ? setupScreen : (
-            <>
-              {/* DISCOVER TAB */}
+      {/* OPERATIONS CORE */}
+      <main className="ops-center">
+        {!clientId ? (
+          setupScreen
+        ) : (
+          <div className="flux-workspace">
+            {/* TABS AS INDUSTRIAL DOCK */}
+            <nav className="dock-nav">
+              {TABS.map(t => (
+                <button
+                  key={t.id}
+                  className={`dock-btn ${activeTab === t.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(t.id)}
+                >
+                  <span className="dock-label">{t.label}</span>
+                  {t.badge > 0 && <span className="dock-badge">[{t.badge}]</span>}
+                </button>
+              ))}
+              <div className="dock-util">
+                <button onClick={resetConfig} title="RESET_SYSTEM">[RESET]</button>
+              </div>
+            </nav>
+
+            <section className="view-matrix">
               {activeTab === 'discover' && (
-                <div>
-                  <div className="section-intro">
-                    <p>Curated from <strong>Spectrum Pulse's Top 50 Albums of 2025</strong>. Click any card to save to your Sample Vault, or create a full Spotify playlist.</p>
-                    {token && (
-                      <button onClick={() => createPlaylist(defaultAlbums)} className="btn btn-primary">
-                        🚀 Create Full Playlist
-                      </button>
-                    )}
+                <div className="discover-layer">
+                  <div className="matrix-intro">
+                    <p>Algorithmically derived from <strong>Spectrum Pulse's Top 50 Albums of 2025</strong>. Map tracks to Vault or translate to Spotify Playlist.</p>
                   </div>
 
                   {/* RECENT GEMS FEED */}
                   {recentlyPlayed.length > 0 && (
-                    <div className="recent-gems-strip">
-                      <div className="section-subtitle">📡 Recent Gems (Listening History)</div>
-                      <div className="gems-container">
+                    <div className="gem-stream">
+                      <div className="matrix-subtitle">RECENTLY_OBSERVED</div>
+                      <div className="gem-grid">
                         {recentlyPlayed.map((track, idx) => {
                           const isRare = (track.popularity || 0) < 40;
                           return (
-                            <div key={`${track.id}-${idx}`} className="gem-card glass-card">
-                              <img src={track.album?.images[0]?.url} alt="" className="gem-img" />
-                              <div className="gem-info">
-                                <div className="gem-name">{track.name}</div>
-                                <div className="gem-artist">{track.artists[0]?.name}</div>
-                                <div className="gem-badges">
-                                  {isRare && <span className="badge-rare">💎 Rare Find</span>}
-                                  {(track.popularity || 0) > 75 && <span className="badge-trend">🔥 Trending</span>}
-                                  {!isRare && <span className="badge-sample">🎚️ High Sample Potential</span>}
+                            <div key={`${track.id}-${idx}`} className="node-card">
+                              <img src={track.album?.images[0]?.url} alt="" className="node-img" />
+                              <div className="node-info">
+                                <div className="node-name">{track.name}</div>
+                                <div className="node-artist">{track.artists[0]?.name}</div>
+                                <div className="node-meta">
+                                  {isRare && <span className="meta-tag rare">[RARE]</span>}
+                                  {(track.popularity || 0) > 75 && <span className="meta-tag trending">[TREND]</span>}
+                                  {!isRare && <span className="meta-tag sample">[SAMPLE_POTENTIAL]</span>}
                                 </div>
                               </div>
                               <button
-                                className="gem-add-btn"
+                                className="node-action"
                                 onClick={() => addToSamples({
                                   id: track.id,
                                   name: track.name,
@@ -589,9 +561,9 @@ function App() {
                                   spotifyUrl: track.external_urls?.spotify,
                                   uri: track.uri,
                                   addedAt: Date.now(),
-                                  source: 'Recent History'
+                                  source: 'History'
                                 })}
-                              >﹢</button>
+                              >+</button>
                             </div>
                           );
                         })}
@@ -599,23 +571,28 @@ function App() {
                     </div>
                   )}
 
-                  <div className="album-grid">
+                  <div className="album-matrix-grid">
                     {defaultAlbums.map((item) => (
-                      <div key={item.rank} className="album-card">
-                        <div className="rank">#{item.rank}</div>
-                        <div className="album-info">
-                          <div className="artist-name">{item.artist}</div>
-                          <h2 className="album-title">{item.album}</h2>
+                      <div key={item.rank} className="album-matrix-card">
+                        <div className="album-rank">{item.rank}</div>
+                        <img src={item.image} alt={item.album} />
+                        <div className="album-matrix-info">
+                          <h3>{item.album}</h3>
+                          <p>{item.artist}</p>
+                          <div className="album-matrix-actions">
+                            <button onClick={() => addToSamples({
+                              id: item.rank,
+                              name: 'Album Selection',
+                              artist: item.artist,
+                              album: item.album,
+                              image: item.image,
+                              addedAt: Date.now(),
+                              source: 'Discover'
+                            })} className="btn-matrix-small">
+                              VAULT
+                            </button>
+                          </div>
                         </div>
-                        {token && (
-                          <button
-                            className="add-sample-btn"
-                            onClick={() => addAlbumToSamples(item)}
-                            title="Add to Sample Lab"
-                          >
-                            ﹢
-                          </button>
-                        )}
                       </div>
                     ))}
                   </div>
@@ -625,61 +602,49 @@ function App() {
               {/* PARSE TAB */}
               {activeTab === 'parse' && (
                 <VideoParser
-                  token={token}
-                  onAlbumsFound={(found) => setParsedAlbums(found)}
-                  onAddToSamples={addToSamples}
+                  onAddTracks={(tracks) => tracks.forEach(addToSamples)}
                 />
               )}
 
               {activeTab === 'lab' && (
                 <SampleLab
-                  token={token}
                   sampleVault={sampleVault}
-                  onRemoveSample={removeFromSamples}
+                  setSampleVault={setSampleVault}
+                  token={token}
                 />
               )}
 
-              {/* DISCOVERY HUB TAB */}
+              {/* MATRIX TAB */}
               {activeTab === 'hub' && (
-                <div className="discovery-hub ombre-panel">
-                  <div className="hub-hero">
-                    <h1 className="hub-title">Discovery Matrix</h1>
-                    <p className="hub-subtitle text-glow">
-                      The next evolution of music connectivity. Mapping
-                      sonic signatures and visualizing hidden genre bridges.
-                    </p>
-                  </div>
-
-                  <div className="hub-matrix-grid">
-                    <div className="matrix-card glass-card">
-                      <div className="matrix-icon">🧠</div>
-                      <span className="matrix-label">AI Mood Mapping</span>
-                      <p className="matrix-desc">Deconstruct tracks into emotional vectors for hyper-specific discovery.</p>
+                <div className="matrix-view">
+                  <h2>OPERATIONAL_MATRIX</h2>
+                  <div className="hub-data-grid">
+                    <div className="data-node">
+                      <span className="node-label">MOOD_MAPPING</span>
+                      <p>Deconstruct tracks into emotional vectors for hyper-specific discovery.</p>
                     </div>
-                    <div className="matrix-card glass-card">
-                      <div className="matrix-icon">🔗</div>
-                      <span className="matrix-label">Sonic Connectivity</span>
-                      <p className="matrix-desc">Visualize the thread between obscure samples and chart-topping hits.</p>
+                    <div className="data-node">
+                      <span className="node-label">SONIC_CONNECTIVITY</span>
+                      <p>Visualize the thread between obscure samples and chart-topping hits.</p>
                     </div>
-                    <div className="matrix-card glass-card">
-                      <div className="matrix-icon">🔮</div>
-                      <span className="matrix-label">Trend Oracle</span>
-                      <p className="matrix-desc">Predict the next wave by analyzing underground sample frequency.</p>
+                    <div className="data-node">
+                      <span className="node-label">TREND_ORACLE</span>
+                      <p>Predict the next wave by analyzing underground sample frequency.</p>
                     </div>
                   </div>
                 </div>
               )}
-            </>
-          )}
-        </div>
+            </section>
+          </div>
+        )}
       </main>
 
-      {/* Loading overlay */}
+      {/* SYSTEM_OVERLAY */}
       {loading && (
-        <div className="loading-overlay">
-          <div className="spinner"></div>
-          <h2 style={{ marginTop: '2rem', textAlign: 'center', padding: '0 2rem' }}>{status}</h2>
-          <div className="progress-bar">
+        <div className="system-overlay">
+          <div className="system-loader"></div>
+          <div className="system-status">{status}</div>
+          <div className="system-progress">
             <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
