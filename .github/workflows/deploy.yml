@@ -69,10 +69,13 @@ jobs:
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account.json
         run: |
           npm install -g firebase-tools
+          
           # Use token if available, otherwise fall back to service account file
           if [ -n "$FIREBASE_TOKEN" ]; then
+            echo "🔐 Authenticating via FIREBASE_TOKEN..."
             firebase appdistribution:distribute \
               android/app/build/outputs/apk/debug/app-debug.apk \
               --app "$FIREBASE_APP_ID" \
@@ -80,11 +83,13 @@ jobs:
               --token "$FIREBASE_TOKEN" \
               --non-interactive
           else
-            export GOOGLE_APPLICATION_CREDENTIALS="${{ github.workspace }}/service-account.json"
+            echo "🔑 Authenticating via Service Account JSON..."
+            # Explicitly target the project to avoid ID mismatches
             firebase appdistribution:distribute \
               android/app/build/outputs/apk/debug/app-debug.apk \
               --app "$FIREBASE_APP_ID" \
               --groups "testers" \
+              --project "${{ secrets.FIREBASE_PROJECT_ID || 'spotifyunlocked' }}" \
               --non-interactive
           fi
 
