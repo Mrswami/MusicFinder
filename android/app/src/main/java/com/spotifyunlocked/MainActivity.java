@@ -1,4 +1,4 @@
-package com.antigravity.spotifyunlocked;
+package com.spotifyunlocked;
 
 import com.getcapacitor.BridgeActivity;
 
