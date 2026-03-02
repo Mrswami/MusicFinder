@@ -49,11 +49,18 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
 
+      - name: Debug Secrets (Check if keys exist)
+        run: |
+          if [ -n "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then echo "✅ SERVICE_ACCOUNT is detected"; else echo "❌ SERVICE_ACCOUNT is MISSING in GitHub Secrets"; fi
+          if [ -n "${{ secrets.FIREBASE_TOKEN }}" ]; then echo "✅ FIREBASE_TOKEN is detected"; else echo "❌ FIREBASE_TOKEN is MISSING in GitHub Secrets"; fi
+          if [ -n "${{ secrets.FIREBASE_ANDROID_APP_ID }}" ]; then echo "✅ FIREBASE_APP_ID is detected"; else echo "❌ FIREBASE_APP_ID is MISSING in GitHub Secrets"; fi
+
       - name: Distribute to Firebase
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
           groups: testers
           file: android/app/build/outputs/apk/debug/app-debug.apk
 
