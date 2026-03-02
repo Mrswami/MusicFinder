@@ -1358,3 +1358,120 @@ code {
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================
+   Recent Gems UI
+   ===================== */
+.recent-gems-strip {
+  margin-bottom: 3rem;
+  overflow: hiden;
+}
+
+.gems-container {
+  display: flex;
+  gap: 1.2rem;
+  overflow-x: auto;
+  padding: 1rem 0.5rem 2rem;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+.gems-container::-webkit-scrollbar {
+  display: none;
+}
+
+.gem-card {
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gem-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-secondary);
+}
+
+.gem-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.gem-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gem-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+}
+
+.gem-artist {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.gem-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge-rare, .badge-trend, .badge-sample {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-rare {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.badge-trend {
+  background: rgba(255, 69, 0, 0.1);
+  color: #ff4500;
+  border: 1px solid rgba(255, 69, 0, 0.2);
+}
+
+.badge-sample {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.gem-add-btn {
+  background: rgba(138, 43, 226, 0.2);
+  color: white;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gem-add-btn:hover {
+  background: var(--accent-secondary);
+  transform: scale(1.1);
+}

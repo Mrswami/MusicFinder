@@ -14,7 +14,8 @@ const SCOPES = [
   "user-library-read",
   "user-read-currently-playing",
   "user-read-playback-state",
-  "user-top-read"
+  "user-top-read",
+  "user-read-recently-played"
 ]
 
 // Persist sample vault in localStorage
@@ -38,6 +39,7 @@ function App() {
   const [vaultPulse, setVaultPulse] = useState(false)
   const [nowPlaying, setNowPlaying] = useState(null)
   const [topTrack, setTopTrack] = useState(null)
+  const [recentlyPlayed, setRecentlyPlayed] = useState([])
 
   // Firebase Cloud Global State
   const [user, setUser] = useState(null)
@@ -164,6 +166,15 @@ function App() {
         if (topRes.status === 200) {
           const data = await topRes.json()
           if (data.items?.length > 0) setTopTrack(data.items[0])
+        }
+
+        // 3. Recently Played (Latest 5 gems)
+        const recentRes = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=5", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        if (recentRes.status === 200) {
+          const data = await recentRes.json()
+          setRecentlyPlayed(data.items.map(i => i.track))
         }
       } catch (err) {
         console.log("Realtime fetch error:", err)
@@ -547,6 +558,46 @@ function App() {
                       </button>
                     )}
                   </div>
+
+                  {/* RECENT GEMS FEED */}
+                  {recentlyPlayed.length > 0 && (
+                    <div className="recent-gems-strip">
+                      <div className="section-subtitle">📡 Recent Gems (Listening History)</div>
+                      <div className="gems-container">
+                        {recentlyPlayed.map((track, idx) => {
+                          const isRare = (track.popularity || 0) < 40;
+                          return (
+                            <div key={`${track.id}-${idx}`} className="gem-card glass-card">
+                              <img src={track.album?.images[0]?.url} alt="" className="gem-img" />
+                              <div className="gem-info">
+                                <div className="gem-name">{track.name}</div>
+                                <div className="gem-artist">{track.artists[0]?.name}</div>
+                                <div className="gem-badges">
+                                  {isRare && <span className="badge-rare">💎 Rare Find</span>}
+                                  {(track.popularity || 0) > 75 && <span className="badge-trend">🔥 Trending</span>}
+                                  {!isRare && <span className="badge-sample">🎚️ High Sample Potential</span>}
+                                </div>
+                              </div>
+                              <button
+                                className="gem-add-btn"
+                                onClick={() => addToSamples({
+                                  id: track.id,
+                                  name: track.name,
+                                  artist: track.artists[0]?.name,
+                                  album: track.album?.name,
+                                  image: track.album?.images[0]?.url,
+                                  spotifyUrl: track.external_urls?.spotify,
+                                  uri: track.uri,
+                                  addedAt: Date.now(),
+                                  source: 'Recent History'
+                                })}
+                              >﹢</button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="album-grid">
                     {defaultAlbums.map((item) => (
