@@ -118,7 +118,8 @@ body::after {
 
 .brand-icon {
   font-size: 1.8rem;
-  filter: drop-shadow(0 0 12px hsla(270, 75%, 55%, 0.6));
+  /* The "Gold Spot" effect */
+  filter: drop-shadow(0 0 15px hsla(48, 100%, 65%, 0.8)) drop-shadow(0 0 30px hsla(270, 75%, 60%, 0.3));
   animation: float 4s ease-in-out infinite;
 }
 
@@ -126,22 +127,23 @@ body::after {
 
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.05);
   }
 }
 
 .brand-name {
-  font-size: 1.1rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, hsl(270, 75%, 75%), hsl(48, 100%, 65%));
+  font-size: 1.15rem;
+  font-weight: 900;
+  /* High contrast Gold to Violet */
+  background: linear-gradient(135deg, var(--accent-secondary) 0%, #fff 25%, hsl(270, 75%, 70%) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .brand-tagline {
