@@ -1,3 +1,4 @@
+# Heartbeat: Build trigger for auth fix validation
 name: Build and Distribute App
 
 on:
