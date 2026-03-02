@@ -70,19 +70,29 @@ jobs:
           FB_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          # Write SA JSON to file for CLI to use
-          echo "$SA_JSON" > sa.json
+          # Verify APK exists
+          if [ ! -f android/app/build/outputs/apk/debug/app-debug.apk ]; then
+            echo "❌ ERROR: APK not found at the expected path!"
+            exit 1
+          fi
+
+          # Write SA JSON using a stable heredoc (avoids quote escaping issues)
+          cat <<EOF > sa.json
+          $SA_JSON
+          EOF
           
           if [ -n "$FB_TOKEN" ]; then
-            echo "🔐 Attempting distribution via TOKEN..."
+            echo "🔐 [TOKEN PATH] FB_TOKEN detected. Distributing..."
             npx firebase-tools appdistribution:distribute android/app/build/outputs/apk/debug/app-debug.apk \
               --app "$APP_ID" \
               --token "$FB_TOKEN" \
               --groups "testers" \
               --non-interactive
           else
-            echo "🔑 Attempting distribution via SERVICE ACCOUNT..."
-            GOOGLE_APPLICATION_CREDENTIALS=sa.json npx firebase-tools appdistribution:distribute android/app/build/outputs/apk/debug/app-debug.apk \
+            echo "🔑 [BACKALCK PATH] FB_TOKEN missing. Trying Service Account..."
+            if [ ! -s sa.json ]; then echo "❌ SA_JSON is empty!"; exit 1; fi
+            export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/sa.json
+            npx firebase-tools appdistribution:distribute android/app/build/outputs/apk/debug/app-debug.apk \
               --app "$APP_ID" \
               --groups "testers" \
               --non-interactive
