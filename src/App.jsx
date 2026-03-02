@@ -300,9 +300,9 @@ function App() {
   }
 
   const TABS = [
-    { id: 'discover', label: '🎵 Discover', desc: 'Curated top albums' },
-    { id: 'parse', label: '🔍 Parse', desc: 'URL / video parser' },
-    { id: 'lab', label: '🎛️ Sample Lab', desc: 'MP3 downloads', badge: sampleVault.length }
+    { id: 'discover', label: 'Discover', icon: '✨' },
+    { id: 'parse', label: 'Parse', icon: '🔍' },
+    { id: 'lab', label: 'Sample Lab', icon: '📀', badge: sampleVault.length }
   ]
 
   const spotifyAuthSection = (
@@ -384,7 +384,7 @@ function App() {
       {/* Sidebar nav */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="brand-icon">🛋️💰</div>
+          <div className="brand-icon">📀</div>
           <div>
             <div className="brand-name">SpotifyUnlocked</div>
             <div className="brand-tagline">Premium Music Lab</div>
@@ -398,6 +398,7 @@ function App() {
               className={`nav-item ${activeTab === tab.id ? 'active' : ''} ${tab.id === 'lab' && vaultPulse ? 'pulsing' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
+              <span className="nav-icon">{tab.icon}</span>
               <span className="nav-label">{tab.label}</span>
               {tab.badge > 0 && (
                 <span className="nav-badge">{tab.badge}</span>

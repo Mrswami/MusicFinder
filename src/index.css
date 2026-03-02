@@ -1032,6 +1032,8 @@ code {
 
   .topbar-auth {
     width: auto;
+    transform: scale(0.9);
+    transform-origin: right;
   }
 
   .panel-content {

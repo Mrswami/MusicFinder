@@ -127,7 +127,7 @@ export default function SampleLab({ token, sampleVault, onRemoveSample }) {
             {/* Header */}
             <div className="lab-header">
                 <div className="lab-title-block">
-                    <div className="lab-icon">🎛️</div>
+                    <div className="lab-icon">📀</div>
                     <div>
                         <h2 className="lab-title">Sample Lab</h2>
                         <p className="lab-subtitle">Your music production archive — save, download & sample</p>
