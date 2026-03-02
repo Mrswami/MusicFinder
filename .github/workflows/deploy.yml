@@ -1,4 +1,4 @@
-# Heartbeat: Build trigger for auth fix validation
+# Heartbeat: Verifying new FIREBASE_TOKEN fix
 name: Build and Distribute App
 
 on:
