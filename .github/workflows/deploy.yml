@@ -41,12 +41,21 @@ jobs:
           cd android
           ./gradlew assembleDebug
 
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotifyunlocked-debug-${{ github.run_number }}
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
       - name: Authenticate to Google Cloud
+        continue-on-error: true
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
       - name: Upload to Firebase App Distribution
+        continue-on-error: true
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
         run: |
@@ -56,13 +65,6 @@ jobs:
             --app "$FIREBASE_APP_ID" \
             --groups "testers" \
             --project spotifyunlocked
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: spotifyunlocked-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7
 
   notify:
     runs-on: ubuntu-latest
