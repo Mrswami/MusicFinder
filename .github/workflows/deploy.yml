@@ -49,50 +49,13 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
 
-      - name: Validate and Write Service Account
-        env:
-          SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-        run: |
-          if [ -z "$SERVICE_ACCOUNT_JSON" ]; then
-            echo "❌ ERROR: FIREBASE_SERVICE_ACCOUNT secret is empty!"
-            exit 1
-          fi
-          echo "$SERVICE_ACCOUNT_JSON" > "${{ github.workspace }}/service-account.json"
-          # Basic JSON validation
-          if ! node -e "JSON.parse(require('fs').readFileSync('${{ github.workspace }}/service-account.json', 'utf8'))"; then
-            echo "❌ ERROR: FIREBASE_SERVICE_ACCOUNT is NOT valid JSON."
-            exit 1
-          fi
-          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/service-account.json" >> $GITHUB_ENV
-
-      - name: Upload to Firebase App Distribution
-        env:
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          # Diagnostic: Ensure we are targeting the right project
-          echo "🔍 Diagnostic: Extracting Project ID from JSON..."
-          PROJECT_ID=$(node -e "console.log(JSON.parse(require('fs').readFileSync('${{ github.workspace }}/service-account.json', 'utf8')).project_id)")
-          echo "Target Project (from JSON): ${PROJECT_ID:0:3}***${PROJECT_ID: -3}"
-          
-          # Use token if available, otherwise use explicit service account flag
-          if [ -n "$FIREBASE_TOKEN" ]; then
-            echo "🔐 Authenticating via FIREBASE_TOKEN..."
-            npx firebase-tools appdistribution:distribute \
-              android/app/build/outputs/apk/debug/app-debug.apk \
-              --app "${FIREBASE_APP_ID//[[:space:]]/}" \
-              --groups "testers" \
-              --token "$FIREBASE_TOKEN" \
-              --non-interactive
-          else
-            echo "🔑 Authenticating via Explicit Service Account Flag..."
-            npx firebase-tools appdistribution:distribute \
-              android/app/build/outputs/apk/debug/app-debug.apk \
-              --app "${FIREBASE_APP_ID//[[:space:]]/}" \
-              --groups "testers" \
-              --service-account "${{ github.workspace }}/service-account.json" \
-              --non-interactive
-          fi
+      - name: Distribute to Firebase
+        uses: wzieba/Firebase-App-Distribution@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: testers
+          file: android/app/build/outputs/apk/debug/app-debug.apk
 
   notify:
     runs-on: ubuntu-latest
