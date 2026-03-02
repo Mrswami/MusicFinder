@@ -69,27 +69,28 @@ jobs:
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account.json
         run: |
-          npm install -g firebase-tools
+          # Diagnostic: Ensure we are targeting the right project
+          echo "🔍 Diagnostic: Extracting Project ID from JSON..."
+          PROJECT_ID=$(node -e "console.log(JSON.parse(require('fs').readFileSync('${{ github.workspace }}/service-account.json', 'utf8')).project_id)")
+          echo "Target Project (from JSON): ${PROJECT_ID:0:3}***${PROJECT_ID: -3}"
           
-          # Use token if available, otherwise fall back to service account file
+          # Use token if available, otherwise use explicit service account flag
           if [ -n "$FIREBASE_TOKEN" ]; then
             echo "🔐 Authenticating via FIREBASE_TOKEN..."
-            firebase appdistribution:distribute \
+            npx firebase-tools appdistribution:distribute \
               android/app/build/outputs/apk/debug/app-debug.apk \
-              --app "$FIREBASE_APP_ID" \
+              --app "${FIREBASE_APP_ID//[[:space:]]/}" \
               --groups "testers" \
               --token "$FIREBASE_TOKEN" \
               --non-interactive
           else
-            echo "🔑 Authenticating via Service Account JSON..."
-            # Explicitly target the project to avoid ID mismatches
-            firebase appdistribution:distribute \
+            echo "🔑 Authenticating via Explicit Service Account Flag..."
+            npx firebase-tools appdistribution:distribute \
               android/app/build/outputs/apk/debug/app-debug.apk \
-              --app "$FIREBASE_APP_ID" \
+              --app "${FIREBASE_APP_ID//[[:space:]]/}" \
               --groups "testers" \
-              --project "${{ secrets.FIREBASE_PROJECT_ID || 'spotifyunlocked' }}" \
+              --service-account "${{ github.workspace }}/service-account.json" \
               --non-interactive
           fi
 
