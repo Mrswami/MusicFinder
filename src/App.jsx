@@ -33,13 +33,11 @@ function App() {
   const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState("")
   const [playlistUrl, setPlaylistUrl] = useState("")
-  const [activeTab, setActiveTab] = useState('discover')
-  const [parsedAlbums, setParsedAlbums] = useState([])
-  const [sampleVault, setSampleVault] = useState(loadVault)
-  const [vaultPulse, setVaultPulse] = useState(false)
-  const [nowPlaying, setNowPlaying] = useState(null)
-  const [topTrack, setTopTrack] = useState(null)
   const [recentlyPlayed, setRecentlyPlayed] = useState([])
+  const [topArtists, setTopArtists] = useState([])
+  const [artistNews, setArtistNews] = useState({})
+  const [activeTab, setActiveTab] = useState('home')
+  const [discoverAlbums, setDiscoverAlbums] = useState(
   const [discoverAlbums, setDiscoverAlbums] = useState(
     JSON.parse(localStorage.getItem('discover_hydration_v1')) || defaultAlbums
   )
@@ -178,6 +176,36 @@ function App() {
         if (recentRes.status === 200) {
           const data = await recentRes.json()
           setRecentlyPlayed(data.items.map(i => i.track))
+        }
+
+        // 4. Top Artists & New Release Check
+        const artistsRes = await fetch("https://api.spotify.com/v1/me/top/artists?limit=10&time_range=short_term", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        if (artistsRes.status === 200) {
+          const data = await artistsRes.json()
+          setTopArtists(data.items)
+
+          // Check for releases in the last 14 days
+          const news = {}
+          for (const artist of data.items) {
+            const relRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
+              headers: { Authorization: `Bearer ${token}` }
+            })
+            if (relRes.status === 200) {
+              const relData = await relRes.json()
+              if (relData.items?.length > 0) {
+                const latest = relData.items[0]
+                const relDate = new Date(latest.release_date)
+                const fourteenDaysAgo = new Date()
+                fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
+                if (relDate > fourteenDaysAgo) {
+                  news[artist.id] = latest
+                }
+              }
+            }
+          }
+          setArtistNews(news)
         }
       } catch (err) {
         console.log("Realtime fetch error:", err)
@@ -441,10 +469,10 @@ function App() {
   }
 
   const TABS = [
-    { id: 'discover', label: 'DISCOVER', icon: '' },
+    { id: 'home', label: 'CORE', icon: '' },
+    { id: 'discover', label: 'RADAR', icon: '' },
     { id: 'parse', label: 'PARSE', icon: '' },
-    { id: 'lab', label: 'VAULT', icon: '', badge: sampleVault.length },
-    { id: 'hub', label: 'MATRIX', icon: '' }
+    { id: 'lab', label: 'VAULT', icon: '', badge: sampleVault.length }
   ]
 
   const spotifyAuthSection = (
@@ -572,6 +600,67 @@ function App() {
             </nav>
 
             <section className="view-matrix">
+              {activeTab === 'home' && (
+                <div className="home-layer">
+                  <div className="matrix-intro">
+                    <p>[STATUS: ONLINE] Welcome to <strong>CORE_INTELLIGENCE</strong>. Monitoring your primary artist collective and recent release activity.</p>
+                  </div>
+
+                  <div className="matrix-subtitle">TOP_ARTIST_RADAR</div>
+                  <div className="artist-grid">
+                    {topArtists.map((artist) => {
+                      const hasNew = artistNews[artist.id]
+                      return (
+                        <div key={artist.id} className="artist-card-obsidian">
+                          <img src={artist.images[0]?.url} alt="" className="artist-img" />
+                          <div className="artist-info">
+                            <div className="artist-name">{artist.name}</div>
+                            <div className="artist-genre">{artist.genres?.[0] || 'GENRE_NULL'}</div>
+                          </div>
+                          {hasNew && (
+                            <div className="new-release-alert pulse-glow">
+                              <div className="alert-header">[NEW_RELEASE_DETECTED]</div>
+                              <div className="alert-body">{hasNew.name}</div>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {recentlyPlayed.length > 0 && (
+                    <div className="gem-stream" style={{ marginTop: '3rem' }}>
+                      <div className="matrix-subtitle">RECENTLY_OBSERVED_GEMS</div>
+                      <div className="gem-grid">
+                        {recentlyPlayed.map((track, idx) => (
+                          <div key={`${track.id}-${idx}`} className="node-card">
+                            <img src={track.album?.images[0]?.url} alt="" className="node-img" />
+                            <div className="node-info">
+                              <div className="node-name">{track.name}</div>
+                              <div className="node-artist">{track.artists[0]?.name}</div>
+                            </div>
+                            <button
+                              className="node-action"
+                              onClick={() => addToSamples({
+                                id: track.id,
+                                name: track.name,
+                                artist: track.artists[0]?.name,
+                                album: track.album?.name,
+                                image: track.album?.images[0]?.url,
+                                spotifyUrl: track.external_urls?.spotify,
+                                uri: track.uri,
+                                addedAt: Date.now(),
+                                source: 'History'
+                              })}
+                            >+</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {activeTab === 'discover' && (
                 <div className="discover-layer">
                   <div className="matrix-intro">
