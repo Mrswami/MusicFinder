@@ -1723,7 +1723,7 @@ code {
 
   /* OPS CENTER - FULL BLEED WORKSPACE */
   .ops-center {
-    padding: 1.5rem 1rem 140px 1rem !important;
+    padding: 1.5rem 0.8rem 180px 0.8rem !important;
     width: 100%;
     overflow: visible !important;
     flex: 1;
@@ -1738,29 +1738,33 @@ code {
   /* MATRIX GRID - 2 COL COMPACT */
   .album-matrix-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.8rem !important;
+    gap: 0.6rem !important;
   }
 
   /* DOCK - FLOATING MINIMALIST NAV */
   .dock-nav {
     left: 0.5rem !important;
     right: 0.5rem !important;
-    bottom: 0.5rem !important;
+    bottom: 1.5rem !important;
+    /* Raised to clear System Nav */
     width: calc(100% - 1rem) !important;
-    height: 54px !important;
+    height: 58px !important;
     border-radius: 12px;
     padding: 0 0.4rem !important;
-    background: rgba(10, 10, 10, 0.95) !important;
+    background: rgba(10, 10, 10, 0.98) !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    border-color: #333 !important;
   }
 
   .dock-btn {
-    padding: 0.4rem 0.6rem !important;
+    padding: 0.4rem 0.2rem !important;
     font-size: 0.6rem !important;
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-width: 0;
   }
 
   .dock-badge {
@@ -1769,6 +1773,11 @@ code {
     right: 5px;
     margin: 0;
     font-size: 0.5rem;
+  }
+
+  .dock-label {
+    font-size: 0.55rem !important;
+    letter-spacing: 0.05em !important;
   }
 
   /* SETUP SCREEN */
@@ -1788,5 +1797,28 @@ code {
 
   .setup-header h2 {
     font-size: 1.5rem;
+  }
+
+  /* Matrix grid adjustments */
+  .album-matrix-card {
+    padding: 0.8rem !important;
+  }
+
+  .album-matrix-info h3 {
+    font-size: 0.85rem !important;
+    white-space: normal !important;
+    height: auto !important;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .album-matrix-info p {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .btn-matrix-small {
+    width: 100% !important;
+    font-size: 0.65rem !important;
+    padding: 0.6rem !important;
   }
 }
