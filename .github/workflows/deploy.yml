@@ -76,11 +76,9 @@ jobs:
             exit 1
           fi
 
-          # Write SA JSON using a stable heredoc (avoids quote escaping issues)
-          cat <<EOF > sa.json
-          $SA_JSON
-          EOF
-          
+          # Write SA JSON to disk
+          echo "$SA_JSON" > sa.json
+
           if [ -n "$FB_TOKEN" ]; then
             echo "🔐 [TOKEN PATH] FB_TOKEN detected. Distributing..."
             npx firebase-tools appdistribution:distribute android/app/build/outputs/apk/debug/app-debug.apk \
