@@ -575,7 +575,13 @@ function App() {
                     {defaultAlbums.map((item) => (
                       <div key={item.rank} className="album-matrix-card">
                         <div className="album-rank">{item.rank}</div>
-                        <img src={item.image} alt={item.album} />
+                        {item.image ? (
+                          <img src={item.image} alt={item.album} />
+                        ) : (
+                          <div className="album-placeholder">
+                            <span>[NO_IMG_DATA]</span>
+                          </div>
+                        )}
                         <div className="album-matrix-info">
                           <h3>{item.album}</h3>
                           <p>{item.artist}</p>
